@@ -1,0 +1,993 @@
+package avanzzo;
+
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.sql.*;
+
+public class noviUnos extends JFrame{
+
+	private JLabel lnaziv, lbrkutija, lkolicina, lloto, lpozicije;
+	private JTextField tfnaziv, tfbrkutija, tfkolicina, tfloto, tfpozicije;
+	private JButton bunesi;
+	
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static final String DB_URL = "jdbc:mysql://localhost/pakovanje";
+	static final String USER = "root";
+	static final String PASS = "";
+	
+	Connection conn = null;
+	Statement stmt = null;
+	
+	
+	public noviUnos (String string) {
+		super(string);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setBounds(450,200,300,400);
+		kreirajKomponente();
+		dodajKomponente();
+		postaviPozicije();
+		dugmad();
+		
+		
+	}
+	
+	
+	
+	public void dugmad() {
+		bunesi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (	tfnaziv.getText().equalsIgnoreCase("")||
+						tfbrkutija.getText().equalsIgnoreCase("")||
+						tfkolicina.getText().equalsIgnoreCase("")||
+						tfpozicije.getText().equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(noviUnos.this, "Niste popunili obavezna polja!", "Greska", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					
+					String naziv, pozicija;
+					String brkutija, kolicina, loto;
+					
+					naziv = tfnaziv.getText();
+					pozicija = tfpozicije.getText();
+					
+					//loto = Integer.parseInt(tfloto.getText());
+					//brkutija = Integer.parseInt(tfbrkutija.getText());
+					//kolicina = Integer.parseInt(tfkolicina.getText());
+					
+					brkutija = tfbrkutija.getText();
+					kolicina = tfkolicina.getText();
+					loto = tfloto.getText();
+					try
+					{
+					    //STEP 2: Register JDBC driver
+					      Class.forName("com.mysql.jdbc.Driver");
+
+					      //STEP 3: Open a connection
+					      System.out.println("Connecting to database...");
+					      conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+					      //STEP 4: Execute a query
+					      System.out.println("Creating statement...");
+					      stmt = conn.createStatement();
+					      String sql = "INSERT INTO avanzzo " + "values ('"+naziv+"','"+brkutija+"','"+kolicina+"','"+loto+"','"+pozicija+"')";
+					      stmt.executeUpdate(sql);
+					}
+					catch (Exception e)
+					{
+						JOptionPane.showMessageDialog(null, "Do�lo je do gre�ke: "+e);
+					}
+					finally
+					{
+						
+					}
+					
+				}
+			}
+			
+		});
+		
+	}
+	public void postaviPozicije() {
+		//prvi red
+		
+		lnaziv.setBounds(30,50,100,30);
+		tfnaziv.setBounds(120, 50, 150, 25);
+		
+		//drugi red
+		
+		lbrkutija.setBounds(30, 100, 100, 30);
+		tfbrkutija.setBounds(120, 100, 150, 25);
+		
+		//treci red
+		
+		lkolicina.setBounds(30, 150, 100, 30);
+		tfkolicina.setBounds(120,150,150,25);
+		
+		//cetvrti red
+		
+		lloto.setBounds(30, 200, 100, 30);
+		tfloto.setBounds(120, 200, 150, 25);
+		
+		//peti red
+		
+		lpozicije.setBounds(30, 250, 100, 30);
+		tfpozicije.setBounds(120, 250, 150, 25);
+		
+		//sesti red
+		
+		bunesi.setBounds(170, 300, 100, 40);
+		
+		
+	}
+	public void dodajKomponente() {
+		Container kontajner = getContentPane();
+		kontajner.setLayout(null);
+		
+		kontajner.add(lnaziv);
+		kontajner.add(lbrkutija);
+		kontajner.add(lkolicina);
+		kontajner.add(lloto);
+		kontajner.add(lpozicije);
+		
+		kontajner.add(tfnaziv);
+		kontajner.add(tfbrkutija);
+		kontajner.add(tfkolicina);
+		kontajner.add(tfloto);
+		kontajner.add(tfpozicije);
+		
+		kontajner.add(bunesi);
+		
+		
+	}
+	public void kreirajKomponente() {
+		lnaziv = new JLabel ("Naziv:");
+		lbrkutija = new JLabel ("Broj kutija:");
+		lkolicina = new JLabel ("Kolicina:");
+		lloto = new JLabel ("Lotto:");
+		lpozicije = new JLabel ("Pozicije:");
+		
+		tfnaziv = new JTextField();
+		tfbrkutija = new JTextField();
+		tfkolicina = new JTextField();
+		tfloto = new JTextField();
+		tfpozicije = new JTextField();
+		
+		bunesi = new JButton ("Unesi");
+		
+		
+		
+	}
+	public static void main(String[] args) {
+		
+		noviUnos ogui = new noviUnos ("Unesi avanzzo");
+		ogui.setVisible(true);
+		ogui.setResizable(false);
+
+	}
+
+}
+
+package avanzzo;
+
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.sql.*;
+
+public class obrisi extends JFrame {
+
+	private JLabel lnaziv, lloto;
+	private  JTextField tfnaziv;
+	private JTextField tfloto;
+	private JButton bobrisi, bsledeci;
+	
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static final String DB_URL = "jdbc:mysql://localhost/pakovanje";
+	static final String USER = "root";
+	static final String PASS =  "";
+	
+	Connection conn = null;
+	Statement stmt = null;
+	
+	public obrisi (String string) {
+		super(string);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setBounds (450,200,300,400);
+		kreirajKomponente();
+		dodajKomponente();
+		postaviPozicije();
+		dugmad();
+		
+	}
+	public void dugmad() {
+		
+		bobrisi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if 	(	tfnaziv.getText().equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(obrisi.this, "Morate unijeti naziv artikla!", "Greska!", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					JOptionPane.showMessageDialog(obrisi.this, "Artikl je obrisan!", "Gotovo!", JOptionPane.INFORMATION_MESSAGE);
+				//	otvoriKonekciju();
+				
+					
+					 obrisiKolonu();
+					 
+				}
+			}
+			
+		});
+		
+		bsledeci.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tfnaziv.setText("");
+				tfloto.setText("");
+				
+			}
+			
+		});
+	}
+	
+	public  void obrisiKolonu() {
+		
+		String naziv = tfnaziv.getText();
+		
+		try 
+	     {  
+			
+			
+			otvoriKonekciju();
+	        //Class.forName("com.mysql.jdbc.Driver");
+	     //   Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+			System.out.println("Test");
+	        PreparedStatement st = conn.prepareStatement("DELETE FROM avanzzo WHERE Naziv = '" +naziv+ "';");
+	        st.executeUpdate(); 
+	        System.out.println("Test2");
+	     }
+	     catch(Exception e)
+	     {
+	         System.out.println(e);
+	     }
+		 finally{
+			 
+			 zatvoriKonekciju();
+		 }
+		
+	}
+	public void otvoriKonekciju() //povezivanje sa bazom, obevezno na kraju zatvorit sa zatvoriKonekciju()
+	{	
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Povezujem se...");
+			
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			System.out.println("Povezao sam se!");
+			
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka u otvaranju konekcije: ");
+		}
+	}
+	
+	public  void zatvoriKonekciju()//obavezno na kraju
+	{
+		try
+		{
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+			
+			System.out.println("Zatvorena konekcija!");
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka u zatvaranju konekcije: ");
+		}
+	}
+	public void postaviPozicije() {
+		//prvi red
+		
+		lnaziv.setBounds(30, 100, 100, 30);
+		tfnaziv.setBounds(100, 100, 150, 25);
+		
+		//drugi red
+		
+		lloto.setBounds(30, 140, 100, 30);
+		tfloto.setBounds(100, 140, 150, 25);
+		
+		//treci red
+		
+		bobrisi.setBounds(150, 190, 100, 40);
+		bsledeci.setBounds(40, 190, 100, 40);
+		
+	}
+	public void dodajKomponente() {
+		Container kontajner = getContentPane();
+		kontajner.setLayout(null);
+		
+		kontajner.add(lnaziv);
+		kontajner.add(lloto);
+		
+		kontajner.add(tfloto);
+		kontajner.add(tfnaziv);
+		
+		kontajner.add(bobrisi);
+		kontajner.add(bsledeci);
+		
+		
+	}
+	public void kreirajKomponente() {
+		lnaziv = new JLabel ("Naziv:");
+		lloto = new JLabel ("Lotto:");
+		
+		tfnaziv = new JTextField();
+		tfloto = new JTextField();
+		
+		bobrisi = new JButton ("Obrisi");
+		bsledeci = new JButton ("Sledeci");
+		
+		
+	}
+	public static void main(String[] args) {
+		obrisi ogui = new obrisi ("Obrisi avanzzo");
+		ogui.setVisible(true);
+		ogui.setResizable(false);
+
+	}
+
+}
+
+package avanzzo;
+
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+public class ostatak extends JFrame {
+
+	private JButton bunesi, bpogledaj, bobrisi, bizlaz;
+	
+	public ostatak (String string) {
+		super(string);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setBounds(450,200,300,400);
+		kreirajKomponente();
+		dodajKomponente();
+		postaviPozicije();
+		dugmad();
+		
+	}
+	public void dugmad() {
+		bizlaz.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(DISPOSE_ON_CLOSE);
+				
+			}
+			
+		});
+		
+		bunesi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				unesi un = new unesi ("Unesi avanzzo");
+				un.setVisible(true);
+				un.setResizable(false);
+				dispose();
+				
+				
+			}
+			
+		});
+		
+		bpogledaj.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				pogledaj po = new pogledaj ("Pretrazi avanzzo");
+				po.setVisible(true);
+				po.setResizable(false);
+				dispose();
+				
+			}
+			
+		});
+		
+		bobrisi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				obrisi ob = new obrisi ("Obrisi avanzzo");
+				ob.setVisible(true);
+				ob.setResizable(false);
+				dispose();
+				
+				
+			}
+			
+		});
+		
+	}
+	public void postaviPozicije() {
+		
+		bunesi.setBounds(50, 80, 200, 40);
+		bpogledaj.setBounds(50, 140, 200, 40);
+		bobrisi.setBounds(50, 200, 200, 40);
+		bizlaz.setBounds(50, 260, 200, 40);
+		
+		
+	}
+	public void dodajKomponente() {
+		Container kontajner = getContentPane();
+		kontajner.setLayout(null);
+		
+		kontajner.add(bunesi);
+		kontajner.add(bpogledaj);
+		kontajner.add(bobrisi);
+		kontajner.add(bizlaz);
+		
+		
+	}
+	public void kreirajKomponente() {
+		
+		bunesi = new JButton ("Unesi avanzzo");
+		bpogledaj = new JButton ("Pogledaj avanzzo");
+		bobrisi = new JButton ("Obrisi avanzzo");
+		bizlaz = new JButton ("Izlaz");
+		
+		
+	}
+	public static void main(String[] args) {
+		
+		ostatak ogui = new ostatak ("Glavni meni");
+		ogui.setVisible(true);
+		ogui.setResizable(false);
+
+	}
+
+}
+
+package avanzzo;
+
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.sql.*;
+
+public class pogledaj extends JFrame{
+
+	private JLabel lnaziv, lbrkutija, lkolicina, lloto, llokacija;
+	private JTextField tfnaziv, tfbrkutija, tfkolicina, tfloto, tflokacija;
+	private JButton bpogledaj, bsledeci;
+	
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static final String DB_URL = "jdbc:mysql://localhost/pakovanje";
+	static final String USER = "root";
+	static final String PASS =  "";
+	
+	Connection conn = null;
+	Statement stmt = null;
+	
+	public pogledaj (String string) {
+		super(string);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setBounds(450,200,450,200);
+		kreirajKomponente();
+		dodajKomponente();
+		postaviPozicije();
+		dugmad();
+		
+	}
+	
+	public String[][] nadiArtikle(String Naziv)
+	{
+		String rezultat[][] = new String[999][12];
+		otvoriKonekciju();
+		try
+		{
+			stmt = conn.createStatement();
+			String query = "SELECT Brkutija, Kolicina, Lotto, Pozicija FROM avanzzo WHERE Naziv = '"+Naziv+"'";	
+			ResultSet rs = stmt.executeQuery(query);
+			
+			for (int brojac = 0; rs.next(); brojac++)
+			{
+				rezultat[brojac][0] = rs.getString("Brkutija");
+				tfbrkutija.setText(rezultat[brojac][0]);
+				rezultat[brojac][1] = rs.getString("Kolicina");
+				tfkolicina.setText(rezultat[brojac][1]);
+				rezultat[brojac][2] = rs.getString("Lotto");
+				tfloto.setText(rezultat[brojac][2]);
+				rezultat[brojac][3] = rs.getString("Pozicija");
+				tflokacija.setText(rezultat[brojac][3]);
+				
+			}
+			
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka: "+e);
+		}
+		finally
+		{
+			zatvoriKonekciju();
+		}
+		
+		return rezultat;
+	}
+	
+
+	
+	
+	public void dugmad() {
+		
+		bpogledaj.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (tfnaziv.getText().equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(pogledaj.this, "Morate unijeti naziv artikla!", "Greska!", JOptionPane.ERROR_MESSAGE);
+				}else {
+					
+					
+					String naziv;
+					naziv =tfnaziv.getText();
+					
+					try 
+				     {  
+				        /*Class.forName("com.mysql.jdbc.Driver");
+				        Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+
+				        PreparedStatement st = connection.prepareStatement("SELECT * FROM avanzzo WHERE Naziv = " +naziv+ ";");
+				        st.executeUpdate(); */
+						nadiArtikle(tfnaziv.getText());
+				        
+				        
+				        
+				       // tfbrkutija.setText(""+Brkutijica);
+				        //tfkolicina.setText(""+Kolicina);
+				     }
+				     catch(Exception e)
+				     {
+				         System.out.println(e);
+				     }
+					 finally{
+						 
+						 zatvoriKonekciju();
+					 }
+					
+
+				}
+			}
+			
+		});
+		
+		bsledeci.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tfnaziv.setText("");
+				tfbrkutija.setText("");
+				tfkolicina.setText("");
+				tfloto.setText("");
+				tflokacija.setText("");
+				
+			}
+			
+		});
+		
+	}
+	
+	public void trazi() {
+		
+		String naziv;
+		naziv =tfnaziv.getText();
+		
+		try 
+	     {  
+	        Class.forName("com.mysql.jdbc.Driver");
+	        Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+
+	        PreparedStatement st = connection.prepareStatement("SELECT * FROM avanzzo WHERE Naziv = " +naziv+ ";");
+	        st.executeUpdate(); 
+	     }
+	     catch(Exception e)
+	     {
+	         System.out.println(e);
+	     }
+		 finally{
+			 
+			 zatvoriKonekciju();
+		 }
+		
+		
+	}
+	public void otvoriKonekciju() //povezivanje sa bazom, obevezno na kraju zatvorit sa zatvoriKonekciju()
+	{	
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Povezujem se...");
+			
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			System.out.println("Povezao sam se!");
+			
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka u otvaranju konekcije: ");
+		}
+	}
+	
+	public  void zatvoriKonekciju()//obavezno na kraju
+	{
+		try
+		{
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+			
+			System.out.println("Zatvorena konekcija!");
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka u zatvaranju konekcije: ");
+		}
+	}
+	public void postaviPozicije() {
+		//prvi red
+		
+		lnaziv.setBounds(30, 30, 100, 30);
+		lbrkutija.setBounds(100,30,100,30);
+		lkolicina.setBounds(190, 30, 100, 30);
+		lloto.setBounds(280, 30, 100, 30);
+		llokacija.setBounds(350, 30, 100, 30);
+		
+		//drugi red
+		
+		tfnaziv.setBounds(15, 70, 70, 23);
+		tfbrkutija.setBounds(90, 70, 80, 23);
+		tfkolicina.setBounds(175, 70, 70, 23);
+		tfloto.setBounds(250, 70, 80, 23);
+		tflokacija.setBounds(335, 70, 80, 23);
+		
+		//treci red
+		
+		bpogledaj.setBounds(320, 110, 100, 40);
+		bsledeci.setBounds(210, 110, 100, 40);
+		
+	}
+	public void dodajKomponente() {
+		Container kontajner = getContentPane();
+		kontajner.setLayout(null);
+		
+		kontajner.add(lnaziv);
+		kontajner.add(lbrkutija);
+		kontajner.add(lkolicina);
+		kontajner.add(llokacija);
+		kontajner.add(lloto);
+		
+		kontajner.add(tfnaziv);
+		kontajner.add(tfbrkutija);
+		kontajner.add(tfkolicina);
+		kontajner.add(tfloto);
+		kontajner.add(tflokacija);
+		
+		kontajner.add(bpogledaj);
+		kontajner.add(bsledeci);
+		
+		
+	}
+	public void kreirajKomponente() {
+		
+		lnaziv = new JLabel ("Naziv");
+		lbrkutija = new JLabel("Broj kutija");
+		lkolicina = new JLabel ("Kolicina");
+		lloto = new JLabel ("Loto");
+		llokacija = new JLabel ("Lokacija");
+		
+		tfnaziv = new JTextField();
+		tfbrkutija = new JTextField();
+		tfkolicina = new JTextField();
+		tfloto = new JTextField();
+		tflokacija = new JTextField();
+		
+		bpogledaj = new JButton ("Pogledaj");
+		bsledeci = new JButton ("Sledeci");
+		
+	}
+	public static void main(String[] args) {
+		
+		pogledaj ogui = new pogledaj ("Pogledaj avanzzo");
+		ogui.setVisible(true);
+		ogui.setResizable(false);	
+	
+		
+
+	}
+
+}
+
+package avanzzo;
+
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.sql.*;
+
+public class unesi extends JFrame{
+
+	private JLabel lnaziv, lbrkutija, lkolicina, lloto, lpozicije;
+	private JTextField tfnaziv, tfbrkutija, tfkolicina, tfloto, tfpozicije;
+	private JButton bunesi, bsledeci;
+	
+	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	static final String DB_URL = "jdbc:mysql://localhost/pakovanje";
+	static final String USER = "root";
+	static final String PASS =  "";
+	
+	Connection conn = null;
+	Statement stmt = null;
+	
+	
+	public unesi (String string) {
+		super(string);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setBounds(450,200,300,400);
+		kreirajKomponente();
+		dodajKomponente();
+		postaviPozicije();
+		dugmad();
+		
+		
+	}
+	
+	public void otvoriKonekciju() //povezivanje sa bazom, obevezno na kraju zatvorit sa zatvoriKonekciju()
+	{	
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Povezujem se...");
+			
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			System.out.println("Povezao sam se!");
+			
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka u otvaranju konekcije: ");
+		}
+	}
+	
+	public void zatvoriKonekciju()//obavezno na kraju
+	{
+		try
+		{
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+			
+			System.out.println("Zatvorena konekcija!");
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka u zatvaranju konekcije: ");
+		}
+	}
+	
+	public void dugmad() {
+		bunesi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (	tfnaziv.getText().equalsIgnoreCase("")||
+						tfbrkutija.getText().equalsIgnoreCase("")||
+						tfkolicina.getText().equalsIgnoreCase("")||
+						tfpozicije.getText().equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(unesi.this, "Niste popunili obavezna polja!", "Greska", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					JOptionPane.showMessageDialog(unesi.this, "Artikl je unijet","Gotovo!",JOptionPane.INFORMATION_MESSAGE);
+					
+					String naziv, pozicija;
+					String brkutija, kolicina, loto;
+					
+					naziv = tfnaziv.getText();
+					pozicija = tfpozicije.getText();
+					
+					//loto = Integer.parseInt(tfloto.getText());
+					//brkutija = Integer.parseInt(tfbrkutija.getText());
+					//kolicina = Integer.parseInt(tfkolicina.getText());
+					
+					brkutija = tfbrkutija.getText();
+					kolicina = tfkolicina.getText();
+					loto = tfloto.getText();
+					try
+					{
+						if(provjeriNaziv(tfnaziv.getText()) == false)
+						{
+							otvoriKonekciju();
+						stmt = conn.createStatement();
+						String query = "INSERT INTO avanzzo  VALUES('"+naziv+"','"+brkutija+"','"+kolicina+"','"+loto+"','"+pozicija+"')";
+								
+								
+						System.out.println(query); //radi provjere
+						stmt.executeUpdate(query);
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Desila se greska artikal vec postoji");
+						}
+					}
+					catch (Exception e)
+					{
+						JOptionPane.showMessageDialog(null, "Do�lo je do gre�ke: "+e);
+					}
+					finally
+					{
+						zatvoriKonekciju();
+					}
+					
+				}
+			}
+			
+		});
+		
+		bsledeci.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tfnaziv.setText("");
+				tfbrkutija.setText("");
+				tfkolicina.setText("");
+				tfpozicije.setText("");
+				tfloto.setText("");
+				
+			}
+			
+		});
+		
+	}
+	public void postaviPozicije() {
+		//prvi red
+		
+		lnaziv.setBounds(30,50,100,30);
+		tfnaziv.setBounds(120, 50, 150, 25);
+		
+		//drugi red
+		
+		lbrkutija.setBounds(30, 100, 100, 30);
+		tfbrkutija.setBounds(120, 100, 150, 25);
+		
+		//treci red
+		
+		lkolicina.setBounds(30, 150, 100, 30);
+		tfkolicina.setBounds(120,150,150,25);
+		
+		//cetvrti red
+		
+		lloto.setBounds(30, 200, 100, 30);
+		tfloto.setBounds(120, 200, 150, 25);
+		
+		//peti red
+		
+		lpozicije.setBounds(30, 250, 100, 30);
+		tfpozicije.setBounds(120, 250, 150, 25);
+		
+		//sesti red
+		
+		bunesi.setBounds(170, 300, 100, 40);
+		bsledeci.setBounds(60, 300, 100, 40);
+		
+	}
+	public void dodajKomponente() {
+		Container kontajner = getContentPane();
+		kontajner.setLayout(null);
+		
+		kontajner.add(lnaziv);
+		kontajner.add(lbrkutija);
+		kontajner.add(lkolicina);
+		kontajner.add(lloto);
+		kontajner.add(lpozicije);
+		
+		kontajner.add(tfnaziv);
+		kontajner.add(tfbrkutija);
+		kontajner.add(tfkolicina);
+		kontajner.add(tfloto);
+		kontajner.add(tfpozicije);
+		
+		kontajner.add(bunesi);
+		kontajner.add(bsledeci);
+		
+	}
+	public void kreirajKomponente() {
+		lnaziv = new JLabel ("Naziv:");
+		lbrkutija = new JLabel ("Broj kutija:");
+		lkolicina = new JLabel ("Kolicina:");
+		lloto = new JLabel ("Lotto:");
+		lpozicije = new JLabel ("Pozicije:");
+		
+		tfnaziv = new JTextField();
+		tfbrkutija = new JTextField();
+		tfkolicina = new JTextField();
+		tfloto = new JTextField();
+		tfpozicije = new JTextField();
+		
+		bunesi = new JButton ("Unesi");
+		bsledeci = new JButton ("Sledeci");
+		
+		
+	}
+	
+	public boolean provjeriNaziv(String naziv)
+	{
+		boolean postoji = true;
+		otvoriKonekciju();
+		try
+		{
+			stmt = conn.createStatement();
+			String query = "SELECT Naziv FROM avanzzo WHERE Naziv = '"+naziv+"'";
+			ResultSet rs = stmt.executeQuery(query);
+			
+			if (rs.next()) postoji = true;
+			else postoji = false;
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Desila se gre�ka: "+e);
+		}
+		finally
+		{
+			//zatvoriKonekciju();
+		}
+		return postoji;
+	}
+
+	
+	public static void main(String[] args) {
+		
+		unesi ogui = new unesi ("Unesi avanzzo");
+		ogui.setVisible(true);
+		ogui.setResizable(false);
+
+	}
+
+}
